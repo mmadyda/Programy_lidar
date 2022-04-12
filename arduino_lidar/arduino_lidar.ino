@@ -15,7 +15,14 @@ SoftwareSerial mySerial(2, 3); // RX, TX LIDAR
 RPLidar lidar;
 
 #define RPLIDAR_MOTOR 4 // The PWM pin for control the speed of RPLIDAR's motor.
-// This pin should connected with the RPLIDAR's MOTOCTRL signal
+#define LED_1 6
+#define LED_2 7
+#define LED_3 8
+#define LED_4 9
+#define LED_5 10
+#define LED_6 11
+#define LED_7 12
+#define LED_8 13
 
 float ODL_1 = 0.6;
 float ODL_2 = 0.8;
@@ -26,19 +33,11 @@ float ODL_6 = 1.6;
 float ODL_7 = 1.8;
 float ODL_8 = 2.0;
 
-int zakres_1 = 0;
-int zakres_2 = 0;
-int zakres_3 = 0;
-int zakres_4 = 0;
-int zakres_5 = 0;
-int zakres_6 = 0;
-int zakres_7 = 0;
-int zakres_8 = 0;
-
-int liczba_skanow = 50;
+int CZULOSC = 1;  //USTAWIENIE CZUŁOŚCI
+int liczba_skanow = 0;
 
 unsigned long previousMillis = 0;
-const long BLINK_INTERVAL = 1000;   // interval at which to blink LED (milliseconds)
+const long BLINK_INTERVAL = 500;   // interval at which to blink LED (milliseconds)
 int ledState = LOW;
 float min_dist = 999;
 void dopisz()
@@ -57,10 +56,26 @@ void setup() {
   lidar.begin(Serial);
   mySerial.begin(115200);
 
-  mySerial.println("Witoj Michał");
 
   // set pin modes
   pinMode(RPLIDAR_MOTOR, OUTPUT);
+  pinMode(LED_1, OUTPUT);
+  pinMode(LED_2, OUTPUT);
+  pinMode(LED_3, OUTPUT);
+  pinMode(LED_4, OUTPUT);
+  pinMode(LED_5, OUTPUT);
+  pinMode(LED_6, OUTPUT);
+  pinMode(LED_7, OUTPUT);
+  pinMode(LED_8, OUTPUT);
+
+  digitalWrite(LED_1, HIGH);
+  digitalWrite(LED_2, HIGH);
+  digitalWrite(LED_3, HIGH);
+  digitalWrite(LED_4, HIGH);
+  digitalWrite(LED_5, HIGH);
+  digitalWrite(LED_6, HIGH);
+  digitalWrite(LED_7, HIGH);
+  digitalWrite(LED_8, HIGH);
 }
 
 void loop() {
@@ -72,10 +87,9 @@ void loop() {
     bool  startBit = lidar.getCurrentPoint().startBit; //whether this point is belong to a new scan
     byte  quality  = lidar.getCurrentPoint().quality; //quality of the current measurement
 
-    //mySerial.println("Start bit: ");
-    //mySerial.println(startBit);
+    //if (angle > 315 or angle < 45)
 
-    if (angle > 315 or angle < 45)
+    if (angle > 355 or angle < 5)
     {
       if (metry < min_dist and metry != 0)
       {
@@ -86,107 +100,150 @@ void loop() {
 
     if (startBit == 1)
     {
-      //mySerial.println("min dist: ");
-      mySerial.println(min_dist);
 
-      if (min_dist <= ODL_1 )
+      liczba_skanow++;
+      dopisz();
+      if (liczba_skanow >= CZULOSC)
       {
 
+        liczba_skanow = 0;
 
-        if (currentMillis - previousMillis >= BLINK_INTERVAL) {
-          // if the LED is off turn it on and vice-versa:
-          if (ledState == LOW)
-          {
-            ledState = HIGH;
-          }
-          else {
-            ledState = LOW;
-          }
 
-          // set the LED with the ledState of the variable:
-          mySerial.println(ledState);
 
-          // save the last time you blinked the LED
-          previousMillis = currentMillis;
-        }
-      }
-      else if (min_dist > ODL_1 and min_dist <= ODL_2 )
-      {
-        zakres_2++;
-        if (zakres_2 >= liczba_skanow)
+        if (min_dist <= ODL_1 )
         {
-          dopisz();
+          if (currentMillis - previousMillis >= BLINK_INTERVAL) {
+            if (ledState == LOW)
+            {
+              ledState = HIGH;
+              digitalWrite(LED_1, ledState);
+              digitalWrite(LED_2, ledState);
+              digitalWrite(LED_3, ledState);
+              digitalWrite(LED_4, ledState);
+              digitalWrite(LED_5, ledState);
+              digitalWrite(LED_6, ledState);
+              digitalWrite(LED_7, ledState);
+              digitalWrite(LED_8, ledState);
+            }
+            else {
+              ledState = LOW;
+              digitalWrite(LED_1, ledState);
+              digitalWrite(LED_2, ledState);
+              digitalWrite(LED_3, ledState);
+              digitalWrite(LED_4, ledState);
+              digitalWrite(LED_5, ledState);
+              digitalWrite(LED_6, ledState);
+              digitalWrite(LED_7, ledState);
+              digitalWrite(LED_8, ledState);
+            }
+
+            previousMillis = currentMillis;
+          }
+        }
+        else if (min_dist > ODL_1 and min_dist <= ODL_2 )
+        {
           mySerial.println("2");
-          zakres_2 = 0;
+          digitalWrite(LED_1, HIGH);
+          digitalWrite(LED_2, LOW);
+          digitalWrite(LED_3, HIGH);
+          digitalWrite(LED_4, HIGH);
+          digitalWrite(LED_5, HIGH);
+          digitalWrite(LED_6, HIGH);
+          digitalWrite(LED_7, HIGH);
+          digitalWrite(LED_8, HIGH);
+
         }
-      }
-      else if (min_dist > ODL_2  and min_dist <= ODL_3 )
-      {
-        zakres_3++;
-        if (zakres_3 >= liczba_skanow)
+        else if (min_dist > ODL_2  and min_dist <= ODL_3 )
         {
-          dopisz();
           mySerial.println("3");
-          zakres_3 = 0;
+          digitalWrite(LED_1, HIGH);
+          digitalWrite(LED_2, HIGH);
+          digitalWrite(LED_3, LOW);
+          digitalWrite(LED_4, HIGH);
+          digitalWrite(LED_5, HIGH);
+          digitalWrite(LED_6, HIGH);
+          digitalWrite(LED_7, HIGH);
+          digitalWrite(LED_8, HIGH);
+
         }
-      }
-      else if (min_dist > ODL_3 and min_dist <= ODL_4 )
-      {
-        zakres_4++;
-        if (zakres_4 >= liczba_skanow)
+        else if (min_dist > ODL_3 and min_dist <= ODL_4 )
         {
-          dopisz();
           mySerial.println("4");
-          zakres_4 = 0;
+          digitalWrite(LED_1, HIGH);
+          digitalWrite(LED_2, HIGH);
+          digitalWrite(LED_3, HIGH);
+          digitalWrite(LED_4, LOW);
+          digitalWrite(LED_5, HIGH);
+          digitalWrite(LED_6, HIGH);
+          digitalWrite(LED_7, HIGH);
+          digitalWrite(LED_8, HIGH);
         }
-      }
-      else if (min_dist > ODL_4 and min_dist <= ODL_5 )
-      {
-        zakres_5++;
-        if (zakres_5 >= liczba_skanow)
+        else if (min_dist > ODL_4 and min_dist <= ODL_5 )
         {
-          dopisz();
           mySerial.println("5");
-          zakres_5 = 0;
+          digitalWrite(LED_1, HIGH);
+          digitalWrite(LED_2, HIGH);
+          digitalWrite(LED_3, HIGH);
+          digitalWrite(LED_4, HIGH);
+          digitalWrite(LED_5, LOW);
+          digitalWrite(LED_6, HIGH);
+          digitalWrite(LED_7, HIGH);
+          digitalWrite(LED_8, HIGH);
         }
-      }
-      else if (min_dist > ODL_5 and min_dist <= ODL_6 )
-      {
-        zakres_6++;
-        if (zakres_6 >= liczba_skanow)
+        else if (min_dist > ODL_5 and min_dist <= ODL_6 )
         {
-          dopisz();
           mySerial.println("6");
-          zakres_6 = 0;
+          digitalWrite(LED_1, HIGH);
+          digitalWrite(LED_2, HIGH);
+          digitalWrite(LED_3, HIGH);
+          digitalWrite(LED_4, HIGH);
+          digitalWrite(LED_5, HIGH);
+          digitalWrite(LED_6, LOW);
+          digitalWrite(LED_7, HIGH);
+          digitalWrite(LED_8, HIGH);
         }
-      }
-      else if (min_dist > ODL_6 and min_dist <= ODL_7 )
-      {
-        zakres_7++;
-        if (zakres_7 >= liczba_skanow)
+        else if (min_dist > ODL_6 and min_dist <= ODL_7 )
         {
-          dopisz();
           mySerial.println("7");
-          zakres_7 = 0;
+          digitalWrite(LED_1, HIGH);
+          digitalWrite(LED_2, HIGH);
+          digitalWrite(LED_3, HIGH);
+          digitalWrite(LED_4, HIGH);
+          digitalWrite(LED_5, HIGH);
+          digitalWrite(LED_6, HIGH);
+          digitalWrite(LED_7, LOW);
+          digitalWrite(LED_8, HIGH);
         }
-      }
-      else if (min_dist > ODL_7 and min_dist <= ODL_8 )
-      {
-        zakres_8++;
-        if (zakres_8 >= liczba_skanow)
+        else if (min_dist > ODL_7 and min_dist <= ODL_8 )
         {
-          dopisz();
           mySerial.println("8");
-          zakres_8 = 0;
-          {
-          }
+          digitalWrite(LED_1, HIGH);
+          digitalWrite(LED_2, HIGH);
+          digitalWrite(LED_3, HIGH);
+          digitalWrite(LED_4, HIGH);
+          digitalWrite(LED_5, HIGH);
+          digitalWrite(LED_6, HIGH);
+          digitalWrite(LED_7, HIGH);
+          digitalWrite(LED_8, LOW);
 
         }
-      }
-      min_dist = 999;
-    }
+        else
+        {
+          digitalWrite(LED_1, HIGH);
+          digitalWrite(LED_2, HIGH);
+          digitalWrite(LED_3, HIGH);
+          digitalWrite(LED_4, HIGH);
+          digitalWrite(LED_5, HIGH);
+          digitalWrite(LED_6, HIGH);
+          digitalWrite(LED_7, HIGH);
+          digitalWrite(LED_8, HIGH);
+        }
+        min_dist = 999;
+      }//if (startBit == 1)
+    }//if(liczba_skanow >= CZULOSC)
 
-  }
+
+  }// koniec if (IS_OK(lidar.waitPoint()))
   else
   {
     analogWrite(RPLIDAR_MOTOR, 0); //stop the rplidar motor

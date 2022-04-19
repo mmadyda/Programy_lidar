@@ -25,13 +25,13 @@ RPLidar lidar;
 #define LED_8 13
 
 float ODL_1 = 0.6;
-float ODL_2 = 0.8;
-float ODL_3 = 1.0;
-float ODL_4 = 1.2;
-float ODL_5 = 1.4;
-float ODL_6 = 1.6;
-float ODL_7 = 1.8;
-float ODL_8 = 2.0;
+float ODL_2 = 0.9;
+float ODL_3 = 1.2;
+float ODL_4 = 1.5;
+float ODL_5 = 1.8;
+float ODL_6 = 2.1;
+float ODL_7 = 2.4;
+float ODL_8 = 2.7;
 
 int CZULOSC = 1;  //USTAWIENIE CZUŁOŚCI
 int liczba_skanow = 0;
@@ -87,9 +87,9 @@ void loop() {
     bool  startBit = lidar.getCurrentPoint().startBit; //whether this point is belong to a new scan
     byte  quality  = lidar.getCurrentPoint().quality; //quality of the current measurement
 
-    //if (angle > 315 or angle < 45)
+    //if (angle > 270 or angle < 90)
 
-    if (angle > 355 or angle < 5)
+    if (angle > 270 or angle < 90)
     {
       if (metry < min_dist and metry != 0)
       {

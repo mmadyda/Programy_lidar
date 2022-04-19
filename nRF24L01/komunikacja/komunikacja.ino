@@ -31,10 +31,11 @@ void setup() {
 }
 
 void loop() {
+  radio.openWritingPipe(pipeWrite);
+  radio.openReadingPipe(1, pipeRead);
   radio.stopListening();
   radio.write(dane, sizeof(dane));
   radio.startListening();
-  while(!radio.available());
   if(radio.available())
   {
   radio.read(msg, sizeof(msg));

@@ -10,11 +10,11 @@
 #include <RPLidar.h>
 #include <SoftwareSerial.h>
 
-SoftwareSerial mySerial(3, 4); // RX, TX LIDAR
+SoftwareSerial mySerial(4, 5); // RX, TX LIDAR
 
 RPLidar lidar;
 
-#define RPLIDAR_MOTOR 2 // The PWM pin for control the speed of RPLIDAR's motor.
+#define RPLIDAR_MOTOR 3 // The PWM pin for control the speed of RPLIDAR's motor.
 #define LED_1 6
 #define LED_2 7
 #define LED_3 8

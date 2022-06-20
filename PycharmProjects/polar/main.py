@@ -10,14 +10,22 @@ import matplotlib.pyplot as plt
 plt.axes(projection='polar')
 
 
-for rad in np.arange(0.1 * math.pi, 2 * math.pi, .3):
+for rad in np.arange(0 * math.pi, 2 * math.pi, .1):
 
-    for r in np.arange(0.1, 12,0.2):
+    for r in np.arange(0, 12,0.1):
         x = r*cos(rad)
         y = r*sin(rad)
 
-        if y < 2 and y > -2:
-            plt.polar(rad, r, 'b.')
+        if y < 0.75 and y > -0.75:
+
+            if  x <= 0 and x > -3:
+                plt.polar(rad, r, 'r.')
+            elif x >= 0.0 and x < 3:
+                plt.polar(rad, r, 'y.')
+            elif x >= 3 and x < 12 or x <= -3 and x > -12:
+                plt.polar(rad, r, 'y.')
+            else:
+                plt.polar(rad, r, 'b.')
 
 
 

@@ -1,8 +1,10 @@
+#include <RPLidar.h>
+
 
 
 // This sketch code is based on the RPLIDAR driver library provided by RoboPeak
 //W bibliotece arduino w pliku
-#include <RPLidar.h>
+
 
 // You need to create an driver instance
 RPLidar lidar;
@@ -16,10 +18,10 @@ float diody_metry = 10000;
 
 
 int CZULOSC = 0;  //USTAWIENIE CZUŁOŚCI
-int liczba_skanow = 2;
+int liczba_skanow = 8;
 byte LED_SWIEC = 0;  //0 nie swiec, 99 migaj
-const float ODL_MIN = 2;
-const float SKOK = 0.3;
+const float ODL_MIN = 0.6;
+const float SKOK = 0.6;
 float ZAKRESY[NUM_LEDS];
 
 
@@ -56,7 +58,7 @@ void loop() {
     
 
     //if (angle > 355 or angle < 8)
-    if (angle > 280 or angle < 80)
+    if (angle > 315 or angle < 45)
     {
       float metry = distance / 1000;
       double rad = angle * DEG_TO_RAD;
@@ -81,7 +83,7 @@ void loop() {
 
 
     //if (startBit == true and min_dist < 20)
-    if (startBit == true and min_dist < 20)
+    if (startBit == true)
     {
       Serial1.flush();
       liczba_skanow++;
@@ -118,9 +120,16 @@ void loop() {
 
     // try to detect RPLIDAR...
     rplidar_response_device_info_t info;
+    Serial.println("uru LIDAR");
     if (IS_OK(lidar.getDeviceInfo(info, 100))) {
       // detected...
       lidar.startScan();
+      Serial.println("start LIDAR");
+      float distance = lidar.getCurrentPoint().distance; //distance value in mm unit
+    float angle    = lidar.getCurrentPoint().angle; //anglue value in degree
+    bool  startBit = lidar.getCurrentPoint().startBit; //whether this point is belong to a new scan
+    byte  quality  = lidar.getCurrentPoint().quality; //quality of the current measurement
+    Serial.println(distance);
       
 
 
